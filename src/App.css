@@ -24,9 +24,9 @@
   color: white;
 }
 
-.App-link {
+/* .App-link {
   color: #61dafb;
-}
+} */
 
 @keyframes App-logo-spin {
   from {
@@ -35,4 +35,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+.note-text::-webkit-scrollbar-thumb{
+  background:rgb(219, 218, 218);
+  border-radius: 20px;
+}
+
+.note-text::-webkit-scrollbar{
+  width:5px
 }
