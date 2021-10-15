@@ -9,10 +9,38 @@ import {
   Link,
   CircularProgress,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Link as BaseLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { LOGIN_USER_MUTATION } from "../../GraphQL/Mutations";
+import { useMutation } from "@apollo/client";
+import { useUser } from "../../context/UserContext/userContext";
 export const SignIn = () => {
+  const [loginUser, { error, data, loading }] =
+    useMutation(LOGIN_USER_MUTATION);
+  const { setUser } = useUser();
+  const navigate = useNavigate();
+  const handleSignInSubmit = async (event) => {
+    event.preventDefault();
+    // const { from } = locationState;
+    const formdata = new FormData(event.currentTarget);
+    loginUser({
+      variables: {
+        email: formdata.get("email"),
+        password: formdata.get("password"),
+      },
+    })
+      .then(({ data }) => {
+        setUser(data.loginUser);
+        localStorage.setItem("keepnotes_user", JSON.stringify(data.loginUser));
+        navigate("/");
+        console.log({ currentUser: data });
+      })
+      .catch((error) => {
+        alert(`Signin Error: ${error.message}`);
+        console.log({ error });
+      });
+  };
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -28,10 +56,7 @@ export const SignIn = () => {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box
-            component="form"
-            // onSubmit={(e) => handleSignInSubmit(e, locationState)}
-          >
+          <Box component="form" onSubmit={(e) => handleSignInSubmit(e)}>
             <TextField
               margin="normal"
               label="Email Address"
@@ -57,14 +82,14 @@ export const SignIn = () => {
               type="submit"
               fullWidth
               variant="contained"
-              //   disabled={loading}
+              disabled={loading}
             >
-              Sign In
-              {/* {loading ? (
+              {/* Sign In */}
+              {loading ? (
                 <CircularProgress color="secondary" disableShrink />
               ) : (
                 "Sign In"
-              )} */}
+              )}
             </Button>
             <Grid container>
               <Grid item>
