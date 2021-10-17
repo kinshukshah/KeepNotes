@@ -1,20 +1,19 @@
 import "./App.css";
 import React, { useState } from "react";
 import {
-  Button,
   createTheme,
   CssBaseline,
   Paper,
-  Switch,
   ThemeProvider,
   useTheme,
 } from "@mui/material";
-import { AddNoteBox } from "./components/AddNoteBox/addNote.component";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { SignIn } from "./views/SignIn/signin";
 import { PrivateRoute } from "./PrivateRoute";
 import { SignUp } from "./views/SignUp/signup";
 import { Note } from "./views/Note/note";
+import { Header } from "./components/Header/header.component";
+import { UserDetail } from "./components/UserDetails/userDetail.component";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 function App() {
@@ -25,16 +24,12 @@ function App() {
     <>
       <CssBaseline />
       <Paper sx={{ minHeight: "100vh" }}>
-        <Switch onChange={colorMode.toggleColorMode} />
-        {/* <Typography variant="h1">
-          {theme.palette.mode === "dark" ? "Dark Mode" : "Light Mode"}
-        </Typography> */}
-        {/* <AddNoteBox /> */}
-        <Button onClick={() => navigate("/signin")}>CLICKME</Button>
+        <Header toggleColorMode={colorMode.toggleColorMode} />
         <Routes>
           <PrivateRoute path="/" element={<Note />} />
-          <PrivateRoute path="/signin" element={<SignIn />} />
-          <PrivateRoute path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <PrivateRoute path="/userdetails" element={<UserDetail />} />
         </Routes>
       </Paper>
     </>
