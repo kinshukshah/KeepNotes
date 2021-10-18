@@ -5,8 +5,14 @@ import LabelImportantOutlinedIcon from "@mui/icons-material/LabelImportantOutlin
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import { useNote } from "../../context/NoteContext/noteContext";
+import { useMutation } from "@apollo/client";
+import { CREATE_NOTE_MUTATION } from "../../GraphQL/Mutations";
+import { useUser } from "../../context/UserContext/userContext";
 export const NoteMenuOption = ({ setNoteData, noteData }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [createNote, { error, loading, data }] =
+    useMutation(CREATE_NOTE_MUTATION);
+  const { user } = useUser();
   const open = Boolean(anchorEl);
   const { noteArr, setNoteArr } = useNote();
   const handleClick = (event) => {
@@ -25,9 +31,22 @@ export const NoteMenuOption = ({ setNoteData, noteData }) => {
   };
 
   const handleAddToNote = () => {
-    setNoteArr((arr) => [...arr, noteData]);
-    console.log(noteData);
+    createNote({
+      variables: {
+        userId: user._id,
+        ...noteData,
+      },
+    })
+      .then(({ data }) => {
+        setNoteArr((arr) => [...arr, data.createNote]);
+        console.log({ addtoNo: data });
+      })
+      .catch((error) => {
+        alert(`Add to note Error: ${error.message}`);
+        console.log({ error });
+      });
   };
+
   return (
     <div
       style={{
@@ -59,7 +78,7 @@ export const NoteMenuOption = ({ setNoteData, noteData }) => {
         </IconButton>
       </div>
       <div>
-        <Button variant="text" onClick={handleAddToNote}>
+        <Button variant="text" onClick={handleAddToNote} disabled={loading}>
           Add note
         </Button>
       </div>

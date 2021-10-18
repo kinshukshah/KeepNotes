@@ -10,9 +10,18 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useUser } from "../../context/UserContext/userContext";
-
+import { useNavigate } from "react-router-dom";
+import { useNote } from "../../context/NoteContext/noteContext";
 export const UserDetail = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const { setNoteArr } = useNote();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("keepnotes_user");
+    setUser(null);
+    setNoteArr([]);
+    navigate("/signin");
+  };
   return (
     <Container maxWidth="xs">
       <Card variant="elevation">
@@ -40,7 +49,11 @@ export const UserDetail = () => {
           </Grid>
         </CardContent>
         <CardActions>
-          <Button style={{ margin: "0 auto" }} variant="contained">
+          <Button
+            style={{ margin: "0 auto" }}
+            variant="contained"
+            onClick={handleLogout}
+          >
             Logout
           </Button>
         </CardActions>

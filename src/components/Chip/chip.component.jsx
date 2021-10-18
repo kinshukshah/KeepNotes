@@ -2,7 +2,9 @@ import { Chip, Stack } from "@mui/material";
 import React from "react";
 
 export const ChipElement = ({ noteData, setNoteData }) => {
-  const handleDelete = () => console.log("Item Deleted");
+  const handleDelete = () => {
+    setNoteData((data) => ({ ...data, label: "Note" }));
+  };
   return (
     <div>
       <Stack

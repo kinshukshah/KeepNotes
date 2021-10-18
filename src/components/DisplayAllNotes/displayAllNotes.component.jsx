@@ -10,13 +10,17 @@ import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
+import PushPinIcon from "@mui/icons-material/PushPin";
 import { useNote } from "../../context/NoteContext/noteContext";
 import FormDialog from "../EditNoteDialog/editNoteDialog.component";
+import { useMutation } from "@apollo/client";
+import { DELETE_NOTE_MUTATION } from "../../GraphQL/Mutations";
 export const DisplayAllNotes = () => {
   const theme = useTheme();
-  const { noteArr } = useNote();
+  const { noteArr, setNoteArr } = useNote();
   const [open, setOpen] = React.useState(false);
   const [editData, setEditData] = useState(null);
+  const [deleteNote, { loading }] = useMutation(DELETE_NOTE_MUTATION);
 
   const handleClickOpen = (data) => {
     setEditData(data);
@@ -27,11 +31,24 @@ export const DisplayAllNotes = () => {
     setEditData(null);
     setOpen(false);
   };
+
+  const handleNoteDelete = (noteId) => {
+    deleteNote({
+      variables: { noteId },
+    })
+      .then(({ data }) => {
+        let newArr = noteArr.filter((ele) => ele._id !== data.deleteNote._id);
+        setNoteArr([...newArr]);
+      })
+      .catch((error) => {
+        alert(`Could not delete ${error.message}`);
+      });
+  };
   return (
     <Container maxWidth="lg">
       <Grid container spacing={2}>
         {noteArr.map((data) => (
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={3} key={data._id}>
             <Paper
               elevation={3}
               style={{
@@ -62,7 +79,7 @@ export const DisplayAllNotes = () => {
                   {data.title}
                 </Typography>
                 <IconButton style={{ alignSelf: "flex-end" }}>
-                  <PushPinOutlinedIcon />
+                  {data.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
                 </IconButton>
               </div>
 
@@ -90,7 +107,10 @@ export const DisplayAllNotes = () => {
                 <IconButton onClick={() => handleClickOpen(data)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={() => handleNoteDelete(data._id)}
+                  disabled={loading}
+                >
                   <DeleteIcon />
                 </IconButton>
               </div>

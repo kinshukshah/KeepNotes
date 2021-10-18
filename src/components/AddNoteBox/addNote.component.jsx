@@ -17,7 +17,7 @@ export const AddNoteBox = () => {
   const [noteData, setNoteData] = useState({
     title: "",
     note: "",
-    label: "",
+    label: "Note",
     color: "white",
     isArchive: false,
     isPinned: false,
