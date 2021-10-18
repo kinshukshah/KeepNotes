@@ -1,7 +1,7 @@
 import { Chip, Stack } from "@mui/material";
 import React from "react";
 
-export const ChipElement = ({ noteData, setNoteData }) => {
+export const ChipElement = ({ noteData, setNoteData, displayData }) => {
   const handleDelete = () => {
     setNoteData((data) => ({ ...data, label: "Note" }));
   };
@@ -12,7 +12,9 @@ export const ChipElement = ({ noteData, setNoteData }) => {
         spacing={{ xs: 1 }}
         sx={{ flexWrap: "wrap" }}
       >
-        {noteData.label && (
+        {noteData.label && displayData ? (
+          <Chip label={noteData.label} />
+        ) : (
           <Chip label={noteData.label} onDelete={handleDelete} />
         )}
       </Stack>

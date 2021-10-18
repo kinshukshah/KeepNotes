@@ -15,6 +15,7 @@ import { useNote } from "../../context/NoteContext/noteContext";
 import FormDialog from "../EditNoteDialog/editNoteDialog.component";
 import { useMutation } from "@apollo/client";
 import { DELETE_NOTE_MUTATION } from "../../GraphQL/Mutations";
+import { ChipElement } from "../Chip/chip.component";
 export const DisplayAllNotes = () => {
   const theme = useTheme();
   const { noteArr, setNoteArr } = useNote();
@@ -88,7 +89,7 @@ export const DisplayAllNotes = () => {
                 sx={{
                   // minHeight: "80px",
                   // maxHeight: "150px",
-                  height: "75%",
+                  height: "65%",
                   overflowY: "auto",
                   overflowWrap: "break-word",
                   whiteSpace: "pre-wrap",
@@ -97,6 +98,10 @@ export const DisplayAllNotes = () => {
               >
                 {data.note ? data.note : "Empty Note"}
               </Typography>
+              <div style={{ height: "10%" }}>
+                <ChipElement noteData={data} displayData={true} />
+              </div>
+
               <div
                 style={{
                   display: "flex",

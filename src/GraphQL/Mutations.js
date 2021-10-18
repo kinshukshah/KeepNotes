@@ -75,3 +75,35 @@ export const DELETE_NOTE_MUTATION = gql`
     }
   }
 `;
+
+export const EDIT_NOTE_MUTATION = gql`
+  mutation editNote(
+    $userId: ID!
+    $title: String!
+    $note: String!
+    $color: String!
+    $isArchive: Boolean!
+    $isPinned: Boolean!
+    $label: String!
+    $noteId:ID!
+  ) {
+    editNote(
+      noteId:$noteId
+      userId: $userId
+      title: $title
+      note: $note
+      color: $color
+      isArchive: $isArchive
+      isPinned: $isPinned
+      label: $label
+    ) {
+      title
+      note
+      color
+      isArchive
+      isPinned
+      label
+      _id
+    }
+  }
+`;
