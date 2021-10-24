@@ -12,6 +12,10 @@ import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import { IconButton, InputAdornment } from "@mui/material";
 import { NoteMenuOption } from "../NoteMenuOption/noteMenuOption.component";
 import { ChipElement } from "../Chip/chip.component";
+import { useMutation } from "@apollo/client";
+import { EDIT_NOTE_MUTATION } from "../../GraphQL/Mutations";
+import { useUser } from "../../context/UserContext/userContext";
+import { useNote } from "../../context/NoteContext/noteContext";
 export default function FormDialog({
   handleClickOpen,
   handleClose,
@@ -26,42 +30,61 @@ export default function FormDialog({
     isArchive: false,
     isPinned: false,
   });
-  console.log({ editData, noteData });
+  const [editNote, { loading }] = useMutation(EDIT_NOTE_MUTATION);
+  const { user } = useUser();
+  const { noteArr, setNoteArr } = useNote();
+
+  useEffect(() => {
+    if (editData) setNoteData(editData);
+  }, [editData]);
+
   const handleNotePin = () => {
     setNoteData((data) => ({
       ...data,
       isPinned: !data.isPinned,
     }));
   };
-  useEffect(() => {
-    if (editData) setNoteData(editData);
-  }, [editData]);
+
+  const handleEditNote = () => {
+    console.log({ editNoteData: noteData });
+    editNote({
+      variables: {
+        userId: user._id,
+        title: noteData.title,
+        note: noteData.note,
+        color: noteData.color,
+        isArchive: noteData.isArchive,
+        isPinned: noteData.isPinned,
+        label: noteData.label,
+        noteId: noteData._id,
+      },
+    })
+      .then(({ data }) => {
+        let newArrEdit = [...noteArr].map((ele) => {
+          if (ele._id === data.editNote._id) {
+            return data.editNote;
+          } else {
+            return ele;
+          }
+        });
+        setNoteArr([...newArrEdit]);
+        handleClose();
+      })
+      .catch((error) => {
+        alert(`Edit note Error: ${error.message}`);
+        console.log({ error });
+      });
+  };
+
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button> */}
       <Dialog open={open} onClose={handleClose}>
-        {/* <DialogTitle>Subscribe</DialogTitle> */}
         <div
           style={{
             backgroundColor: noteData.color === "white" ? "" : noteData.color,
           }}
         >
           <DialogContent>
-            {/* <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          /> */}
             <TextField
               placeholder="Title"
               sx={{
@@ -112,9 +135,13 @@ export default function FormDialog({
             <ChipElement setNoteData={setNoteData} noteData={noteData} />
           </DialogContent>
           <DialogActions>
-            <NoteMenuOption setNoteData={setNoteData} noteData={noteData} />
-            {/* <Button onClick={handleClose}>Close</Button> */}
-            <Button onClick={handleClose}>Save</Button>
+            <NoteMenuOption
+              setNoteData={setNoteData}
+              noteData={noteData}
+              isEdit={true}
+              handleEditNote={handleEditNote}
+              editLoading={loading}
+            />
           </DialogActions>
         </div>
       </Dialog>

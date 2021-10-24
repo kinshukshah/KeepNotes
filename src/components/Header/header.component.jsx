@@ -38,7 +38,7 @@ export const Header = ({ toggleColorMode }) => {
           <AccountCircleIcon />
         </IconButton>
         <IconButton color="inherit" onClick={toggleColorMode}>
-          {theme.palette.mode === "dark" ? <NightsStayIcon /> : <WbSunnyIcon />}
+          {theme.palette.mode === "dark" ? <WbSunnyIcon /> : <NightsStayIcon />}
         </IconButton>
       </Toolbar>
     </AppBar>

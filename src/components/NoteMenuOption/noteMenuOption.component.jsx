@@ -1,4 +1,10 @@
-import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import React from "react";
 import { ColorOption } from "../ColorOption/coloroption.component";
 import LabelImportantOutlinedIcon from "@mui/icons-material/LabelImportantOutlined";
@@ -6,12 +12,22 @@ import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import { useNote } from "../../context/NoteContext/noteContext";
 import { useMutation } from "@apollo/client";
-import { CREATE_NOTE_MUTATION } from "../../GraphQL/Mutations";
+import {
+  CREATE_NOTE_MUTATION,
+  EDIT_NOTE_MUTATION,
+} from "../../GraphQL/Mutations";
 import { useUser } from "../../context/UserContext/userContext";
-export const NoteMenuOption = ({ setNoteData, noteData }) => {
+export const NoteMenuOption = ({
+  setNoteData,
+  noteData,
+  isEdit,
+  handleEditNote,
+  editLoading,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [createNote, { error, loading, data }] =
     useMutation(CREATE_NOTE_MUTATION);
+
   const { user } = useUser();
   const open = Boolean(anchorEl);
   const { noteArr, setNoteArr } = useNote();
@@ -78,9 +94,19 @@ export const NoteMenuOption = ({ setNoteData, noteData }) => {
         </IconButton>
       </div>
       <div>
-        <Button variant="text" onClick={handleAddToNote} disabled={loading}>
-          Add note
-        </Button>
+        {isEdit ? (
+          <Button
+            variant="text"
+            onClick={handleEditNote}
+            disabled={editLoading}
+          >
+            {editLoading ? <CircularProgress size={25} /> : "Save Note"}
+          </Button>
+        ) : (
+          <Button variant="text" onClick={handleAddToNote} disabled={loading}>
+            Add Note
+          </Button>
+        )}
       </div>
       <Menu
         id="basic-menu"
