@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Loader } from "../../components/Loader/loader.component";
 import { GETALLNOTESBYUSER } from "../../GraphQL/Queries";
 import { useUser } from "../UserContext/userContext";
 export const NoteContext = createContext();

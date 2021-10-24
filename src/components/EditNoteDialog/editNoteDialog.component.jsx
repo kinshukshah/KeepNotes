@@ -1,38 +1,21 @@
-import react, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { AddNoteBox } from "../AddNoteBox/addNote.component";
+import { INITIAL_NOTE_DATA } from "../AddNoteBox/addNote.component";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import { IconButton, InputAdornment } from "@mui/material";
 import { NoteMenuOption } from "../NoteMenuOption/noteMenuOption.component";
 import { ChipElement } from "../Chip/chip.component";
-import { useMutation } from "@apollo/client";
-import { EDIT_NOTE_MUTATION } from "../../GraphQL/Mutations";
-import { useUser } from "../../context/UserContext/userContext";
-import { useNote } from "../../context/NoteContext/noteContext";
 export default function FormDialog({
   handleClickOpen,
   handleClose,
   open,
   editData,
 }) {
-  const [noteData, setNoteData] = useState({
-    title: "",
-    note: "",
-    label: "",
-    color: "white",
-    isArchive: false,
-    isPinned: false,
-  });
-  const [editNote, { loading }] = useMutation(EDIT_NOTE_MUTATION);
-  const { user } = useUser();
-  const { noteArr, setNoteArr } = useNote();
+  const [noteData, setNoteData] = useState(INITIAL_NOTE_DATA);
 
   useEffect(() => {
     if (editData) setNoteData(editData);
@@ -43,37 +26,6 @@ export default function FormDialog({
       ...data,
       isPinned: !data.isPinned,
     }));
-  };
-
-  const handleEditNote = () => {
-    console.log({ editNoteData: noteData });
-    editNote({
-      variables: {
-        userId: user._id,
-        title: noteData.title,
-        note: noteData.note,
-        color: noteData.color,
-        isArchive: noteData.isArchive,
-        isPinned: noteData.isPinned,
-        label: noteData.label,
-        noteId: noteData._id,
-      },
-    })
-      .then(({ data }) => {
-        let newArrEdit = [...noteArr].map((ele) => {
-          if (ele._id === data.editNote._id) {
-            return data.editNote;
-          } else {
-            return ele;
-          }
-        });
-        setNoteArr([...newArrEdit]);
-        handleClose();
-      })
-      .catch((error) => {
-        alert(`Edit note Error: ${error.message}`);
-        console.log({ error });
-      });
   };
 
   return (
@@ -139,8 +91,6 @@ export default function FormDialog({
               setNoteData={setNoteData}
               noteData={noteData}
               isEdit={true}
-              handleEditNote={handleEditNote}
-              editLoading={loading}
             />
           </DialogActions>
         </div>

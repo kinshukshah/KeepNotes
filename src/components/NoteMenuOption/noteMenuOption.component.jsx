@@ -10,27 +10,13 @@ import { ColorOption } from "../ColorOption/coloroption.component";
 import LabelImportantOutlinedIcon from "@mui/icons-material/LabelImportantOutlined";
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 import ArchiveIcon from "@mui/icons-material/Archive";
-import { useNote } from "../../context/NoteContext/noteContext";
-import { useMutation } from "@apollo/client";
-import {
-  CREATE_NOTE_MUTATION,
-  EDIT_NOTE_MUTATION,
-} from "../../GraphQL/Mutations";
-import { useUser } from "../../context/UserContext/userContext";
-export const NoteMenuOption = ({
-  setNoteData,
-  noteData,
-  isEdit,
-  handleEditNote,
-  editLoading,
-}) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [createNote, { error, loading, data }] =
-    useMutation(CREATE_NOTE_MUTATION);
 
-  const { user } = useUser();
+import { useNoteData } from "../../hooks/useNoteData";
+export const NoteMenuOption = ({ setNoteData, noteData, isEdit }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { editLoading, handleEditNote, handleAddToNote, createLoading } = useNoteData();
   const open = Boolean(anchorEl);
-  const { noteArr, setNoteArr } = useNote();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,23 +30,6 @@ export const NoteMenuOption = ({
   const handleNoteLabel = (e) => {
     handleClose();
     setNoteData((data) => ({ ...data, label: e.target.getAttribute("value") }));
-  };
-
-  const handleAddToNote = () => {
-    createNote({
-      variables: {
-        userId: user._id,
-        ...noteData,
-      },
-    })
-      .then(({ data }) => {
-        setNoteArr((arr) => [...arr, data.createNote]);
-        console.log({ addtoNo: data });
-      })
-      .catch((error) => {
-        alert(`Add to note Error: ${error.message}`);
-        console.log({ error });
-      });
   };
 
   return (
@@ -97,14 +66,18 @@ export const NoteMenuOption = ({
         {isEdit ? (
           <Button
             variant="text"
-            onClick={handleEditNote}
+            onClick={() => handleEditNote(noteData)}
             disabled={editLoading}
           >
             {editLoading ? <CircularProgress size={25} /> : "Save Note"}
           </Button>
         ) : (
-          <Button variant="text" onClick={handleAddToNote} disabled={loading}>
-            Add Note
+          <Button
+            variant="text"
+            onClick={() => handleAddToNote(noteData)}
+            disabled={createLoading}
+          >
+            {createLoading ? <CircularProgress size={25} /> : "Add Note"}
           </Button>
         )}
       </div>

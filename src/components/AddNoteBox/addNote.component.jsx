@@ -12,16 +12,18 @@ import { ChipElement } from "../Chip/chip.component";
 import { NoteMenuOption } from "../NoteMenuOption/noteMenuOption.component";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
+
+export const INITIAL_NOTE_DATA = {
+  title: "",
+  note: "",
+  label: "Note",
+  color: "white",
+  isArchive: false,
+  isPinned: false,
+};
 export const AddNoteBox = () => {
   const theme = useTheme();
-  const [noteData, setNoteData] = useState({
-    title: "",
-    note: "",
-    label: "Note",
-    color: "white",
-    isArchive: false,
-    isPinned: false,
-  });
+  const [noteData, setNoteData] = useState(INITIAL_NOTE_DATA);
 
   const handleNotePin = () => {
     setNoteData((data) => ({
