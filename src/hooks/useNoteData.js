@@ -58,7 +58,7 @@ export const useNoteData = () => {
           }
         });
         setNoteArr([...newArrEdit]);
-        EditModelClose();
+        EditModelClose && EditModelClose();
       })
       .catch((error) => {
         alert(`Edit note Error: ${error.message}`);
