@@ -7,7 +7,7 @@ import {
   DELETE_NOTE_MUTATION,
   EDIT_NOTE_MUTATION,
 } from "../GraphQL/Mutations";
-
+import { INITIAL_NOTE_DATA } from "../components/AddNoteBox/addNote.component";
 export const useNoteData = () => {
   const [editNote, { loading: editLoading }] = useMutation(EDIT_NOTE_MUTATION);
   const [createNote, { loading: createLoading }] =
@@ -17,7 +17,7 @@ export const useNoteData = () => {
   const { user } = useUser();
   const { noteArr, setNoteArr } = useNote();
 
-  const handleAddToNote = (noteData) => {
+  const handleAddToNote = (noteData, setNoteData) => {
     createNote({
       variables: {
         userId: user._id,
@@ -26,6 +26,7 @@ export const useNoteData = () => {
     })
       .then(({ data }) => {
         setNoteArr((arr) => [...arr, data.createNote]);
+        setNoteData(INITIAL_NOTE_DATA);
         console.log({ addtoNo: data });
       })
       .catch((error) => {
@@ -34,7 +35,7 @@ export const useNoteData = () => {
       });
   };
 
-  const handleEditNote = (noteData) => {
+  const handleEditNote = (noteData, EditModelClose) => {
     console.log({ editNoteData: noteData });
     editNote({
       variables: {
@@ -57,7 +58,7 @@ export const useNoteData = () => {
           }
         });
         setNoteArr([...newArrEdit]);
-        // handleClose();
+        EditModelClose();
       })
       .catch((error) => {
         alert(`Edit note Error: ${error.message}`);

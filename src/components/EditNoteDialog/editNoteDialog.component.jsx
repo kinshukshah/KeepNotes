@@ -91,6 +91,7 @@ export default function FormDialog({
               setNoteData={setNoteData}
               noteData={noteData}
               isEdit={true}
+              handleClose={handleClose}
             />
           </DialogActions>
         </div>

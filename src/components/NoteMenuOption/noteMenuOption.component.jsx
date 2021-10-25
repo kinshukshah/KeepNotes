@@ -10,13 +10,17 @@ import { ColorOption } from "../ColorOption/coloroption.component";
 import LabelImportantOutlinedIcon from "@mui/icons-material/LabelImportantOutlined";
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 import ArchiveIcon from "@mui/icons-material/Archive";
-
 import { useNoteData } from "../../hooks/useNoteData";
-export const NoteMenuOption = ({ setNoteData, noteData, isEdit }) => {
+export const NoteMenuOption = ({
+  setNoteData,
+  noteData,
+  isEdit,
+  handleClose: EditModelClose,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { editLoading, handleEditNote, handleAddToNote, createLoading } = useNoteData();
+  const { editLoading, handleEditNote, handleAddToNote, createLoading } =
+    useNoteData();
   const open = Boolean(anchorEl);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -66,7 +70,7 @@ export const NoteMenuOption = ({ setNoteData, noteData, isEdit }) => {
         {isEdit ? (
           <Button
             variant="text"
-            onClick={() => handleEditNote(noteData)}
+            onClick={() => handleEditNote(noteData, EditModelClose)}
             disabled={editLoading}
           >
             {editLoading ? <CircularProgress size={25} /> : "Save Note"}
@@ -74,7 +78,9 @@ export const NoteMenuOption = ({ setNoteData, noteData, isEdit }) => {
         ) : (
           <Button
             variant="text"
-            onClick={() => handleAddToNote(noteData)}
+            onClick={() => {
+              handleAddToNote(noteData, setNoteData);
+            }}
             disabled={createLoading}
           >
             {createLoading ? <CircularProgress size={25} /> : "Add Note"}
