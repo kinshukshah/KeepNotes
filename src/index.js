@@ -16,6 +16,7 @@ import {
 } from "@apollo/client";
 import { ErrorLink, onError } from "@apollo/client/link/error";
 import { UserProvider } from "./context/UserContext/userContext";
+import ToggleColorMode from "./App";
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
   if (graphqlErrors) {
@@ -33,7 +34,7 @@ const link = from([
 ]);
 
 const client = new ApolloClient({
-  uri: "https://UtilizedWillingScientificcomputing.kinshukshah.repl.co/graphql",
+  uri: "https://keepnotes-backend.kinshukshah.repl.co/graphql",
   cache: new InMemoryCache(),
 });
 
@@ -72,7 +73,7 @@ ReactDOM.render(
       <BrowserRouter>
         <UserProvider>
           <NoteProvider>
-            <App />
+            <ToggleColorMode />
           </NoteProvider>
         </UserProvider>
       </BrowserRouter>
