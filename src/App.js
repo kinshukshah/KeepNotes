@@ -26,10 +26,25 @@ function App() {
       <Paper sx={{ minHeight: "100vh" }}>
         <Header toggleColorMode={colorMode.toggleColorMode} />
         <Routes>
-          <PrivateRoute path="/" element={<Note />} />
+          {/* <PrivateRoute path="/" element={<Note />} /> */}
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Note />
+              </PrivateRoute>
+            }
+          />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <PrivateRoute path="/userdetails" element={<UserDetail />} />
+          <Route
+            path="/userdetails"
+            element={
+              <PrivateRoute>
+                <UserDetail />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Paper>
     </>

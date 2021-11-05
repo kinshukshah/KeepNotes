@@ -2,12 +2,12 @@ import React from "react";
 import { Route, Navigate } from "react-router-dom";
 import { useUser } from "./context/UserContext/userContext";
 
-export const PrivateRoute = ({ path, element }) => {
+export const PrivateRoute = ({ children }) => {
   const { user } = useUser();
-  console.log({ user, inc: "Abcb" });
   return user ? (
-    <Route element={element} path={path} />
+    children
   ) : (
-    <Navigate state={{ from: { pathName: path } }} replace to="/signin" />
+    // <Navigate state={{ from: { pathName: path } }} replace to="/signin" />
+    <Navigate replace to="/signin" />
   );
 };
