@@ -21,7 +21,7 @@ export const NoteProvider = ({ children }) => {
     }
   }, [data]);
   return (
-    <NoteContext.Provider value={{ noteArr, setNoteArr }}>
+    <NoteContext.Provider value={{ noteArr, setNoteArr, noteLoading: loading }}>
       {children}
     </NoteContext.Provider>
   );
