@@ -17,6 +17,7 @@ import {
 import { ErrorLink, onError } from "@apollo/client/link/error";
 import { UserProvider } from "./context/UserContext/userContext";
 import ToggleColorMode from "./App";
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
   if (graphqlErrors) {
@@ -85,4 +86,5 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+//serviceWorkerRegistration.register();
 reportWebVitals();
