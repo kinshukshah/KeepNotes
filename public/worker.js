@@ -1,8 +1,16 @@
-// var CACHE_NAME = 'pwa-task-manager';
-// var urlsToCache = [
-//   '/',
-//   '/completed'
-// ];
+var staticCacheName = "keepnotes-cache";
+var urlsToCache = [
+  "/",
+  "/index.html",
+  "../src/index.js",
+  "../src/index.css",
+  "../src/App.js",
+  "../src/App.css",
+  "/static/js/bundle.js",
+  "/static/js/vendors~main.chunk.js",
+  "/static/js/main.chunk.js",
+  "https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-book-education-justicon-flat-justicon-1.png",
+];
 
 // // Install a service worker
 self.addEventListener("install", (event) => {
@@ -14,6 +22,12 @@ self.addEventListener("install", (event) => {
   //       return cache.addAll(urlsToCache);
   //     })
   // );
+  event.waitUntil(
+    caches.open(staticCacheName).then((cache) => {
+      console.log("caching shell assets...", cache);
+      cache.addAll(urlsToCache);
+    })
+  );
   console.log("service worker installed");
 });
 
@@ -30,7 +44,12 @@ self.addEventListener("fetch", (event) => {
   //     }
   //   )
   // );
-  console.log("Fetch Events", event);
+  //console.log("Fetch Events", event);
+  event.respondWith(
+    caches.match(event.request).then((cacheRes) => {
+      return cacheRes || fetch(event.request);
+    })
+  );
 });
 
 // // Update a service worker
@@ -47,5 +66,5 @@ self.addEventListener("activate", (event) => {
   //     );
   //   })
   // );
-  console.log("service worker activated");
+  //console.log("service worker activated");
 });
