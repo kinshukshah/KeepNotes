@@ -1,4 +1,5 @@
-var staticCacheName = "keepnotes-cache";
+var staticCacheName = "keepnotes-cache-v1";
+var dynamicCacheName = "keepnotes-dynamicCache-v1";
 var urlsToCache = [
   "/",
   "/index.html",
@@ -15,13 +16,6 @@ var urlsToCache = [
 // // Install a service worker
 self.addEventListener("install", (event) => {
   // Perform install steps
-  // event.waitUntil(
-  //   caches.open(CACHE_NAME)
-  //     .then(function(cache) {
-  //       console.log('Opened cache');
-  //       return cache.addAll(urlsToCache);
-  //     })
-  // );
   event.waitUntil(
     caches.open(staticCacheName).then((cache) => {
       console.log("caching shell assets...", cache);
@@ -33,38 +27,32 @@ self.addEventListener("install", (event) => {
 
 // // Cache and return requests
 self.addEventListener("fetch", (event) => {
-  // event.respondWith(
-  //   caches.match(event.request)
-  //     .then(function(response) {
-  //       // Cache hit - return response
-  //       if (response) {
-  //         return response;
-  //       }
-  //       return fetch(event.request);
-  //     }
-  //   )
-  // );
   //console.log("Fetch Events", event);
   event.respondWith(
     caches.match(event.request).then((cacheRes) => {
-      return cacheRes || fetch(event.request);
+      return (
+        cacheRes ||
+        fetch(event.request).then((fetchRes) => {
+          caches
+            .open(dynamicCacheName)
+            .then((cache) => cache.put(event.request.url, fetchRes.clone()));
+          return fetchRes;
+        })
+      );
     })
   );
 });
 
 // // Update a service worker
 self.addEventListener("activate", (event) => {
-  // var cacheWhitelist = ['pwa-task-manager'];
-  // event.waitUntil(
-  //   caches.keys().then(cacheNames => {
-  //     return Promise.all(
-  //       cacheNames.map(cacheName => {
-  //         if (cacheWhitelist.indexOf(cacheName) === -1) {
-  //           return caches.delete(cacheName);
-  //         }
-  //       })
-  //     );
-  //   })
-  // );
   //console.log("service worker activated");
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys
+          .filter((key) => key != staticCacheName)
+          .map((key) => caches.delete(key))
+      );
+    })
+  );
 });

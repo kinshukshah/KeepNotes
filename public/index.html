@@ -3,15 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
-    <link rel="icon" href="https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-book-education-justicon-flat-justicon-1.png" />
-    
+    <link
+      rel="icon"
+      href="https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-book-education-justicon-flat-justicon-1.png"
+    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="apple-touch-icon" href="https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-book-education-justicon-flat-justicon-1.png" />
+    <link
+      rel="apple-touch-icon"
+      href="https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-book-education-justicon-flat-justicon-1.png"
+    />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -63,16 +69,7 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">
-      <!-- <div class="navbar">
-        <h3>Task Manager</h3>
-        <a href="/">Current Tasks</a>
-        <a href="/completed">Completed Tasks</a>
-      </div> -->
-      <p class="page-info">
-        Loading...
-      </p>
-    </div>
+    <div id="root"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -84,18 +81,27 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('worker.js').then(function(registration) {
-            console.log('Worker registration successful', registration.scope);
-          }, function(err) {
-            console.log('Worker registration failed', err);
-          }).catch(function(err) {
-            console.log(err);
-          });
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("worker.js")
+            .then(
+              function (registration) {
+                console.log(
+                  "Worker registration successful",
+                  registration.scope
+                );
+              },
+              function (err) {
+                console.log("Worker registration failed", err);
+              }
+            )
+            .catch(function (err) {
+              console.log(err);
+            });
         });
       } else {
-        console.log('Service Worker is not supported by browser.');
+        console.log("Service Worker is not supported by browser.");
       }
     </script>
   </body>
